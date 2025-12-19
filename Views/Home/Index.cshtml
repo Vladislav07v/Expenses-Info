@@ -2,9 +2,15 @@
     ViewData["Title"] = "Home Page";
 }
 <div class="text-center">
-    <h1 class="display-4">Welcome to ExpenseInfo</h1>
+    <center><img style="width:40%" src="images/logo.png"></center>
     <p>
         <a class="btn btn-primary" asp-action="Expenses">View expenses</a>
         <a class="btn btn-primary" asp-action="CreateEditExpense">Add expenses</a>
     </p>
+
+    <div class="container mt-4">
+        <h2 class="mb-3">Calculator</h2>
+        <partial name="_Calculator" />
+    </div>
+
 </div>

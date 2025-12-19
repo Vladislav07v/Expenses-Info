@@ -10,9 +10,10 @@
 <form asp-action="CreateEditExpenseForm" asp-controller="Home" method="post">
     <input type="hidden" asp-for="Id"/>
 
-    <label class="mt-4">Value $</label>
-    <input type="number" class="form-control" step="0.01" asp-for="Value"/>
+    <label class="mt-4" for="Value" data-bs-toggle="tooltip" title="Сума в лева с 2 десетчни">Value $</label>
+    <input type="number" class="form-control" step="0.01" asp-for="Value" id="Value" title="Сума в лева с 2 десетчни" />
     <span asp-validation-for="Value" class="text-danger"></span>
+    <div id="value-warning" class="text-danger mt-2" style="display:none;">This expence is too expensive!</div>
 
     <label class="mt-4">Дата</label>
     <input type="data" class="form-control" asp-for="Date"/>
@@ -33,7 +34,106 @@
     </div>
 
     <button class="btn btn-primary mt-4" type="submit">Ok</button>
+    <button id="clear-btn" type="button" class="btn btn-secondary mt-4 ms-2">Clear</button>
 </form>
-@section Scripts{
-    <partial name="_ValidationScriptsPartial"/>
-}
+<script>
+(function() {
+  const input = document.getElementById('Value');
+  const warning = document.getElementById('value-warning');
+  if (!input) return;
+
+  function truncateStringTo2(s) {
+    if (s == null || s === '') return s;
+    const str = String(s);
+    const dotIndex = str.indexOf('.');
+    if (dotIndex === -1) return str;
+    const intPart = str.slice(0, dotIndex);
+    const frac = str.slice(dotIndex + 1);
+    if (frac.length <= 2) return str;
+    return intPart + '.' + frac.slice(0, 2);
+  }
+
+  function applyTruncateAndWarn() {
+    const current = input.value;
+    const truncated = truncateStringTo2(current);
+    if (truncated !== current) input.value = truncated;
+
+    const n = parseFloat(input.value);
+    if (!Number.isFinite(n)) {
+      if (warning) warning.style.display = 'none';
+      input.style.backgroundColor = '';
+      return;
+    }
+    if (n > 200) {
+      if (warning) warning.style.display = '';
+    } else {
+      if (warning) warning.style.display = 'none';
+    }
+  }
+
+  input.addEventListener('blur', applyTruncateAndWarn);
+  input.addEventListener('input', applyTruncateAndWarn);
+  if (input.form) input.form.addEventListener('submit', applyTruncateAndWarn);
+})();
+</script>
+<script>
+  (function() {
+    const btn = document.getElementById('clear-btn');
+    if (!btn) return;
+    btn.addEventListener('click', function () {
+      const form = btn.closest('form');
+      if (!form) return;
+      // clear inputs bound to model properties
+      const inputs = form.querySelectorAll('input, select, textarea');
+      inputs.forEach(i => {
+        const type = i.getAttribute('type');
+        const name = i.getAttribute('name') || '';
+        // keep antiforgery token if present
+        if (name && name.indexOf('__RequestVerificationToken') !== -1) return;
+        // reset hidden Id to 0
+        if (i.matches('input[type="hidden"][name="Id"]')) {
+          i.value = '0';
+          return;
+        }
+        if (i.tagName.toLowerCase() === 'select') {
+          i.selectedIndex = 0;
+          return;
+        }
+        if (type === 'checkbox' || type === 'radio') {
+          i.checked = false;
+          return;
+        }
+        i.value = '';
+      });
+      // hide warning if visible
+      const warning = document.getElementById('value-warning');
+      if (warning) warning.style.display = 'none';
+    });
+  })();
+</script>
+<script>
+    (function() {
+      const input = document.getElementById('Value');
+      if (!input) return;
+
+      function truncateStringTo2(s) {
+        if (s == null || s === '') return s;
+        const str = String(s);
+        const dotIndex = str.indexOf('.');
+        if (dotIndex === -1) return str;
+        const intPart = str.slice(0, dotIndex);
+        const frac = str.slice(dotIndex + 1);
+        if (frac.length <= 2) return str;
+        return intPart + '.' + frac.slice(0, 2);
+      }
+
+      function applyTruncate() {
+        const current = input.value;
+        const truncated = truncateStringTo2(current);
+        if (truncated !== current) input.value = truncated;
+      }
+
+      input.addEventListener('blur', applyTruncate);
+      if (input.form) input.form.addEventListener('submit', applyTruncate);
+    })();
+</script>

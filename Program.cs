@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using ExpensesInfo.Models;
+using ExpensesInfo.Services;
 namespace ExpensesInfo
 {
     public class Program
@@ -14,6 +15,9 @@ namespace ExpensesInfo
             // 2) EF Core InMemory (лесно за начало, няма нужда от реална SQL база)
             builder.Services.AddDbContext<ExpensesInfoDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+            builder.Services.AddScoped<IExpenseService, ExpenseService>();
+            builder.Services.AddScoped<IExpenseTypeService, ExpenseTypeService>();
 
             var app = builder.Build();
 

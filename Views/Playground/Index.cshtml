@@ -1,0 +1,53 @@
+﻿@{
+    ViewData["Title"] = "JS Playground";
+}
+<div class="container mt-4">
+    <h2 class="mb-3">JS Playground</h2>
+    <!-- Тук поставяйте задачите (HTML бутон/полета) -->
+    <!--1--> <button onclick="alert('Hello from JS!')">Say hello</button> <hr/>
+
+    <!--2--> <span id="msg">Original text</span>
+    <button onclick="document.getElementById('msg').innerHTML='Changed!'">Change</button> <hr/>
+
+    <!--3--> <span id="colorText">Make me red</span>
+    <button onclick="document.getElementById('colorText').style.color='red'">Red</button> <hr /> <br/>
+
+    <!--4--> <span id="box" style="display:none;border:1px solid #ccc;padding:8px;">I am a box</span>
+    <button onclick="
+        const b=document.getElementById('box');
+        b.style.display=(b.style.display==='none')? 'block' : 'none';
+        ">Show/Hide</button> <hr/> <br/>
+
+    <!--5--> <input id="nameBox" placeholder="Your name"/>
+    <button onclick="
+        const n=document.getElementById('nameBox').value;
+        alert('Hello, '+ n + '!');
+        ">Greet</button> <hr/> <br/>
+
+    <!--6--> <input id="a" type="number" placeholder="A">
+    <input id="b" type="number" placeholder="B">
+    <button onclick="
+const x=parseFloat(document.getElementById('a').value)||0;
+ const y=parseFloat(document.getElementById('b').value)||0;
+ alert('Sum = ' + (x+y));
+">Add</button> <hr/> <br/>
+
+    <!--7--> <input id="desc" placeholder="Description" oninput="document.getElementById('submitBtn').disabled = this.value.trim()==='';">
+    <button id="submitBtn" disabled>Submit</button> <hr/> <br/>
+
+    <!--8--> <img id="pic" src="/img/logo1.png" style="width:120px"
+                  onmouseover="this.src='/images/logo2.png'"
+                  onmouseout="this.src='/images/logo1.png'"> <hr/> <br/>
+
+    <!--9--><p id="todayOut"></p>
+    <button onclick="document.getElementById('todayOut').innerHTML=new Date().toLocaleString();
+">      What time is it?
+    </button>
+
+    <p onmouseover="this.style.color='red'" onmouseout="this.style.color='black'">This is a paragraph</p>
+</div>
+@section Scripts {
+    <script>
+        // Тук поставяйте JavaScript за задачите, ако има такъв
+    </script>
+}
